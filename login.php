@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $message = false;
 $type = 'success';
 
@@ -9,7 +11,7 @@ if (isset($_POST['login'])) {
     // check if user exists with the email address
     require_once 'database/connection.php';
 
-    $query = 'SELECT id, email, password FROM users WHERE email=:email';
+    $query = 'SELECT id, email, password, role FROM users WHERE email=:email';
     $stmt = $connection->prepare($query);
     $stmt->bindParam(':email', $email);
     $stmt->execute();
@@ -18,7 +20,12 @@ if (isset($_POST['login'])) {
 
     if ($user) {
         if (password_verify($password, $user['password']) === true) {
+            $_SESSION['id'] = $user['id'];
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['role'] = $user['role'];
             $message = 'User logged in.';
+
+            header('Location: users.php');
         } else {
             $message = 'Invalid credentials.';
             $type = 'danger';

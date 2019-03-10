@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['id'], $_SESSION['email'], $_SESSION['role']) && $_SESSION['role'] !== 'admin') {
+    header('Location: login.php');
+    exit();
+}
+
 require_once 'database/connection.php';
 
 if (isset($_GET['search'])) {
@@ -75,6 +82,10 @@ $users = $stmt->fetchAll();
             <?php endforeach; ?>
             </tbody>
         </table>
+    </div>
+
+    <div class="row">
+        <a href="logout.php" class="btn btn-sm btn-danger">Logout</a>
     </div>
 </div>
 </body>
