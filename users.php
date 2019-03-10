@@ -1,9 +1,18 @@
 <?php
 require_once 'database/connection.php';
 
-$query = 'SELECT id, email, photo FROM users';
-$stmt = $connection->query($query);
-$stmt->execute();
+if (isset($_GET['search'])) {
+    $q = trim($_GET['query']);
+
+    $query = 'SELECT id, email, photo FROM users WHERE email LIKE :query';
+    $stmt = $connection->prepare($query);
+    $stmt->bindValue(':query', "%$q%");
+    $stmt->execute();
+} else {
+    $query = 'SELECT id, email, photo FROM users';
+    $stmt = $connection->query($query);
+    $stmt->execute();
+}
 
 $users = $stmt->fetchAll();
 ?>
@@ -21,6 +30,14 @@ $users = $stmt->fetchAll();
 <body>
 <div class="container">
     <div class="row">
+        <form action="" method="get" class="form-horizontal">
+            <input type="text" name="query" placeholder="Search..." class="form-control">
+
+            <button type="submit" class="btn btn-sm btn-block btn-info" name="search">
+                Search
+            </button>
+        </form>
+
         <table class="table table-bordered table-hovered">
             <thead>
             <tr>
