@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Manager;
 
 class User
 {
@@ -63,10 +63,5 @@ class User
         $this->username = $username;
     }
 }
-
-$user1 = new User();
-$user1->register($_POST);
-
-echo $user1->getUsername().' registered an account with '.$user1->getEmail();
 
 
